@@ -1,6 +1,6 @@
 #!/bin/bash -e
 # by Evgeniy Bondarenko <Bondarenko.Hub@gmail.com>
-# last changes 08.11.2018 Updated
+# last changes 08.04.2019 Updated
 
 
 dockerhub=${dockerhub:-"docker.u2035s.ru"}
