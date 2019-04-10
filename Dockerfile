@@ -1,4 +1,4 @@
-FROM       python:3.6.7-stretch
+FROM       python:3.6.7-stretch as base
 LABEL maintainer="Evgeniy Bondarenko <Bondarenko.Hub@gmail.com>"
 MAINTAINER EvgeniyBondarenko "Bondarenko.Hub@gmail.com"
 
@@ -36,11 +36,10 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash && \
     apt-get install -y nodejs && \
     npm install -g bower
 
-
+ARG NO_CACHE
 
 COPY ./requirements.txt ./
 RUN pip install -r ./requirements.txt
-
 
 # Copy Code
 COPY . ./
@@ -48,3 +47,7 @@ COPY . ./
 RUN mkdir -p components && \
     cp ./bower.json ./components/bower.json && \
     ./manage.py bower install -- --allow-root
+
+FROM base as notifications
+MAINTAINER EvgeniyBondarenko "Bondarenko.Hub@gmail.com"
+CMD python notificator.py

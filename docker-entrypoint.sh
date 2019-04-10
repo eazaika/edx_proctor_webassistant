@@ -1,15 +1,15 @@
 #!/bin/bash -ex
 # by Evgeniy Bondarenko <Bondarenko.Hub@gmail.com>
 # v5   add tmp variable $first_run for run Build static and localization
-# v4.3 edit for variable for default Openshift envaroment
-
-# DynIP
-IP=$(cat /etc/hosts|grep $HOSTNAME |awk '{print $1}')
-export IP=${IP:-"127.0.0.1"}
-export MIGRATION=${MIGRATION:-"false"}
 
 export BIND_ADDR=${BIND_ADDR:-"0.0.0.0"}
 export BIND_PORT=${BIND_PORT:-"80"}
+
+echo "EMAIL_HOST - ${EMAIL_HOST}"
+echo "EMAIL_PORT - ${EMAIL_PORT}"
+echo "EMAIL_USE_TLS - ${EMAIL_USE_TLS}"
+echo "EMAIL_HOST_USER - ${EMAIL_HOST_USER}"
+echo "EMAIL_HOST_PASSWORD - ${EMAIL_HOST_PASSWORD}"
 
 if [ "${MIGRATION}" == 1 ] || [ "${MIGRATION}" == 'TRUE' ] ||  [ "${MIGRATION}" == 'true' ] || [ "${MIGRATION}" == 'True' ]; then
     echo "start  Build static and localization"
@@ -22,4 +22,3 @@ if [ "${MIGRATION}" == 1 ] || [ "${MIGRATION}" == 'TRUE' ] ||  [ "${MIGRATION}" 
 fi
 
 exec "$@"
-
