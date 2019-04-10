@@ -39,7 +39,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash && \
 ARG NO_CACHE
 
 COPY ./requirements.txt ./
-RUN pip install -r ./requirements.txt
+RUN pip --no-cache-dir install -r ./requirements.txt
 
 # Copy Code
 COPY . ./
