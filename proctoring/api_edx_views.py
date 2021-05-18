@@ -16,6 +16,8 @@ from journaling.models import Journaling
 from proctoring.models import Exam, InProgressEventSession, EventSession
 from proctoring.serializers import ExamSerializer
 
+import logging
+log = logging.getLogger(__name__)
 
 class APIRoot(APIView):
     """API Root with list of available endpoints"""
@@ -109,6 +111,7 @@ class ExamViewSet(mixins.ListModelMixin,
         Create new exam, on exam attempt.
         Find Event Session for this exam.
         """
+        log.error('CREATE EXAM')
         data = request.data.copy()
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)

@@ -14,14 +14,14 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="courseSelector" class="create-session-label">{[ i18n('COURSE_NUM') ]}</label>
-                <select id="courseSelector" class="form-control" ng-model="chosenCourse"
-                        ng-options="c for c in courses" ng-change="updateRuns()"></select>
+                <label for="courseSelector" class="create-session-label">{[ i18n('COURSE_NAME') ]}</label>
+                <select id="courseSelector" class="form-control" ng-model="chosenCourseTitle"
+                        ng-options="c for c in courses_titles" ng-change="updateRuns()"></select>
               </div>
               <div class="form-group">
                 <label for="runSelector" class="create-session-label">{[ i18n('COURSE_SESSION') ]}</label>
                 <select id="runSelector" class="form-control" ng-model="chosenRun"
-                        ng-options="r as r.run for r in runs track by r.id" ng-change="updateSessions()"></select>
+                        ng-options="r as r.course_session for r in runs track by r.id" ng-change="updateSessions()"></select>
               </div>
               <div class="form-group">
                 <label for="runSession" class="create-session-label">{[ i18n('EXAM_SESSION') ]}</label>

@@ -113,19 +113,25 @@ def send_review_request(payload):
     )
 
 
-def get_proctored_exams_request():
+def get_proctored_exams_request(page=1):
     """
     Get list of courses wich contains proctored exams
     Api extension must be installed for you OpenEDX
     See https://github.com/raccoongang/open_edx_api_extension
     :return: Response
+    next for paging responce - if number of courses more than 10
     """
-    return _journaling_request(
+    api_point = 'api/extended/courses/proctored'
+    if page != 1:
+        api_point = '{0}?page={1}'.format(api_point, page)
+
+    resp = _journaling_request(
         'get',
-        "api/extended/courses/proctored",
-        (("proctoring_system", "WEB_ASSISTANT"),),
+        api_point,
+        {"proctoring_system": "WEB_ASSISTANT"},
         headers={'X-Edx-Api-Key': settings.EDX_API_KEY}
     )
+    return resp
 
 
 def bulk_start_exams_request(exam_list):

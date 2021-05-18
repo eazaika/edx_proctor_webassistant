@@ -5,6 +5,7 @@ Views for UI application
 import json
 from datetime import datetime, timedelta
 
+from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework import viewsets, status, mixins
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import get_object_or_404
@@ -30,7 +31,8 @@ from proctoring.edx_api import (start_exam_request, stop_exam_request,
                                 send_review_request,
                                 get_proctored_exams_request,
                                 bulk_start_exams_request)
-
+import logging
+log = logging.getLogger(__name__)
 
 def _get_status(code):
     """
@@ -125,6 +127,7 @@ class StopExam(APIView):
                 'status': "submitted"
             }
         """
+        log.error('StopExam')
         exam = get_object_or_404(
             models.Exam.objects.by_user_perms(request.user),
             exam_code=attempt_code
@@ -567,6 +570,8 @@ class Review(APIView):
             response = send_review_request(payload)
             current_status = _get_status(code)
             attempt += 1
+
+        log.error('RESP: {} CURR_STATUS: {}'.format(response, current_status))
         return response, current_status
 
 
@@ -576,15 +581,15 @@ class GetExamsProctored(APIView):
     Supports only GET request
     """
 
-    def get(self, request):
-        response = get_proctored_exams_request()
+    def get(self, request, page=1, results=[], orgs=[]):
+        #log.error('page {}'.format(page))
+        response = get_proctored_exams_request(page)
         try:
             content = response.json()
         except ValueError:
             content = {}
         permissions = request.user.permission_set.all()
-        results = []
-        orgs = []
+
         for row in content.get('results', []):
             if 'proctored_exams' in row and row['proctored_exams']:
                 row['has_access'] = models.has_permission_to_course(
@@ -600,6 +605,13 @@ class GetExamsProctored(APIView):
             for i, res in enumerate(results):
                 if res['org'] in orgs_descriptions:
                     results[i]['org_description'] = orgs_descriptions[res['org']]
+
+        #log.error('results {}'.format(results))
+
+        num_pages = content.get('num_pages', 1)
+        if num_pages > 1 and page < num_pages:
+            self.get(request, page=content.get('current_page', 1) + 1, results=results, orgs=orgs)
+
         current_active_sessions = models.InProgressEventSession.objects.filter(
             proctor=request.user
         ).order_by('-start_date')
@@ -636,10 +648,10 @@ class BulkStartExams(APIView):
         ids_list = []
         for exam in items:
             ids_list.append(exam.id)
-        models.Exam.objects.filter(id__in=ids_list).update(
-            exam_status=exam.STARTED,
-            proctor=request.user
-        )
+            models.Exam.objects.filter(id__in=ids_list).update(
+                exam_status=exam.STARTED,
+                proctor=request.user
+            )
 
         Journaling.objects.create(
             journaling_type=Journaling.BULK_EXAM_STATUS_CHANGE,

@@ -18,10 +18,10 @@ class Course(models.Model):
     """
     Course model
     """
-    course_org = models.CharField(max_length=60)
+    course_org = models.CharField(max_length=100)
     course_id = models.CharField(max_length=60)
     course_run = models.CharField(max_length=60)
-    display_name = models.CharField(max_length=60)
+    display_name = models.CharField(max_length=150)
     course_name = models.CharField(max_length=128, blank=True, null=True)
 
     def get_full_course(self):
@@ -203,7 +203,7 @@ class Exam(models.Model):
     actual_end_date = models.DateTimeField(blank=True, null=True)
     no_of_students = models.IntegerField(blank=True, null=True)
     exam_id = models.CharField(max_length=64, blank=True, null=True)
-    course_identify = models.CharField(max_length=64, blank=True, null=True)
+    course_identify = models.CharField(max_length=150, blank=True, null=True)
     first_name = models.CharField(max_length=60, blank=True, null=True)
     last_name = models.CharField(max_length=60, blank=True, null=True)
     email = models.EmailField(max_length=60, blank=True, null=True)

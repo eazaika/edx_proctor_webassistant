@@ -41,7 +41,7 @@
                 }
             };
             sock.onerror = function (e) {
-                console.log('SockJS error:', e);
+                console.log('SockJS error:', e.data);
             };
             sock.onclose = function () {
                 console.log("SockJS connection closed");

@@ -13,7 +13,7 @@ from tornado import gen
 from raven.contrib.tornado import AsyncSentryClient
 from sockjs.tornado import SockJSRouter, SockJSConnection
 
-
+import json
 logger = logging.getLogger('notifications.web')
 
 
@@ -72,7 +72,9 @@ class NotificationWebApp(tornado.web.Application):
 
         with (yield self.db_pool.Connection()) as conn:
             with conn.cursor() as cursor:
+#                logger.error('COURSES {}'.format(json.dumps(self.courses)))
                 if course_id not in self.courses:
+#                    logger.error('COURSE_ID {}'.format(course_id))
                     yield cursor.execute("SELECT * FROM proctoring_course WHERE display_name=%s", (course_id,))
                     proctoring_course = cursor.fetchone()
                     if not proctoring_course:

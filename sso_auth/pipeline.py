@@ -72,8 +72,8 @@ def create_or_update_permissions(backend, user, response, *args, **kwargs):
 def _update_user_name(backend, user, response, *args, **kwargs):
     try:
         user = User.objects.get(email=response['email'])
-        user.first_name = response.get('firstname')
-        user.last_name = response.get('lastname')
+        user.first_name = response.get('given_name')
+        user.last_name = response.get('family_name')
         user.save()
     except User.DoesNotExist:
         pass

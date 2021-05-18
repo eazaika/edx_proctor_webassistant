@@ -4,10 +4,12 @@
         $scope.orgs = [];
         $scope.orgDetails = [];
         $scope.courses = [];
+        $scope.courses_titles = [];
         $scope.runs = [];
         $scope.exams = [];
         $scope.chosenOrg = null;
         $scope.chosenCourse = null;
+        $scope.chosenCourseTitle = null;
         $scope.chosenRun = null;
         $scope.chosenExam = null;
         $scope.testingCentre = '';
@@ -40,18 +42,22 @@
 
         $scope.updateCourses = function() {
             var courses = [];
+            var courses_titles = [];
 
             angular.forEach(data.data.results, function (val) {
-                if ((val.org === $scope.chosenOrg.key) && (courses.indexOf(val.course) === -1)
+                if ((val.org === $scope.chosenOrg.key) && (courses.indexOf(val.id) === -1)
                     && checkProctoredExams(val)) {
-                    courses.push(val.course);
+                    courses.push(val.id);
+                    courses_titles.push(val.course_title);
                 }
             });
-            courses.sort();
+            //courses.sort();
             $scope.courses = courses;
+            $scope.courses_titles = courses_titles;
 
             if ($scope.courses.length > 0) {
                 $scope.chosenCourse = $scope.courses[0];
+                $scope.chosenCourseTitle = $scope.courses_titles[0];
             }
 
             $scope.updateRuns();
@@ -60,13 +66,16 @@
         $scope.updateRuns = function() {
             var runs = [];
             angular.forEach(data.data.results, function (val) {
-                if ((val.org === $scope.chosenOrg.key) && (val.course === $scope.chosenCourse)
+                if ((val.org === $scope.chosenOrg.key) && (val.course_title === $scope.chosenCourseTitle)
                     && (runs.indexOf(val.run) === -1) && checkProctoredExams(val)) {
                     runs.push(val);
                 }
             });
-            runs.sort(sortRunsArr);
+            //runs.sort(sortRunsArr);
             $scope.runs = runs;
+            //for (key in runs) {
+            //    console.log('key '+key);
+            //}
 
             if ($scope.runs.length > 0) {
                 $scope.chosenRun = $scope.runs[0];
@@ -78,8 +87,8 @@
         $scope.updateSessions = function () {
             var runs = [];
             angular.forEach(data.data.results, function (val) {
-                if ((val.org === $scope.chosenOrg.key) && (val.course === $scope.chosenCourse) &&
-                    (val.run === $scope.chosenRun.run) && (runs.indexOf(val.run) === -1) && checkProctoredExams(val)) {
+                if ((val.org === $scope.chosenOrg.key) && (val.course_title === $scope.chosenCourseTitle) &&
+                    (val.course_session === $scope.chosenRun.course_session) && (runs.indexOf(val.run) === -1) && checkProctoredExams(val)) {
                     $scope.exams = [];
                     angular.forEach(val.proctored_exams, function (proctored_exam) {
                         $scope.exams.push({
@@ -110,7 +119,6 @@
         $scope.startSession = function () {
             $scope.startSessionInProgress = true;
             $scope.errorMsg = '';
-
             TestSession.registerSession($scope.testingCentre, $scope.chosenRun.id, $scope.chosenExam.id,
                 $scope.chosenRun.name, $scope.chosenExam.exam_name, function() {
                     $scope.errorMsg = i18n.translate('SESSION_ERROR_1');
@@ -153,6 +161,7 @@
             orgDetails.sort(sortOrgsArr);
             $scope.orgs = orgs;
             $scope.orgDetails = orgDetails;
+
             if ($scope.orgDetails.length > 0) {
                 $scope.chosenOrg = $scope.orgDetails[0];
                 $scope.updateCourses();

@@ -176,9 +176,13 @@
                             .then(
                                 function (data) {},
                                 function () {
+                                    if(data['status'] == 200) {
+                                        Polling.add_item(item.examCode);
                                     item.btnDisabled = false;
                                     showServerError();
-                                });
+                                    }
+                                }
+                            );
                     } else if (actionName === 'stop') {
                         $uibModal.open({
                             animation: true,

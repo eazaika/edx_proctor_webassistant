@@ -107,10 +107,11 @@
                     students: function ($location, $route, $q, TestSession, Api, Auth) {
                         var deferred = $q.defer();
                         Auth.is_instructor().then(function (is) {
-                            if (is) {
-                                deferred.resolve();
-                                $location.path('/');
-                            } else {
+//                            if (is) {
+//                                console.log('w1');
+//                                deferred.resolve();
+//                                $location.path('/');
+//                            } else {
                                 TestSession
                                     .fetchSession($route.current.params.hash)
                                     .then(function() {
@@ -126,7 +127,7 @@
                                             $location.path('/archive');
                                         }
                                     });
-                            }
+//                            }
                         });
 
                         return deferred.promise;

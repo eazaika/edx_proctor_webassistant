@@ -29,7 +29,7 @@ except IndexError:
 SECRET_KEY = '<ADD_YOUR_SECRET_KEY_IN_LOCAL_SETTINGS>'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -84,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'edx_proctor_webassistant.wsgi.application'
+WSGI_APPLICATION = 'edx_proctor_webassistant.wsgi.application'
 
 
 # Database
@@ -119,10 +119,10 @@ LOCALE_PATHS = (
 LOGIN_URL = LOGIN_REDIRECT_URL = LOGOUT_REDIRECT_URL = "/"
 
 # Auth settings with/without sso
-AUTH_BACKEND_NAME = 'sso_npoed-oauth2'
+AUTH_BACKEND_NAME = 'letiteach-oauth2'
 SSO_ENABLED = True
 
-SSO_NPOED_URL = ''
+SSO_LETITEACH_URL = ''
 PLP_NPOED_URL = ''
 
 if SSO_ENABLED:

@@ -4,7 +4,8 @@
     var module = angular.module('tokenAuth', []);
     module.service('Auth', ['$cookies', '$q', '$http', 'permissions', function($cookies, $q, $http, permissions){
         var token = '';
-        var username = $cookies.get('authenticated_user');
+        var username1 = $cookies.get('authenticated_user');
+        var username = username1.replace(/['"«»]/g, '');
         var restrictions = null;
         var self = this;
 
